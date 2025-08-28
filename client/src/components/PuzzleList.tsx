@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import api from '../utils/api';
+import { Puzzle } from '../utils/types';
 
 const PuzzleList = () => {
-  const [puzzles, setPuzzles] = useState([]);
+  const [puzzles, setPuzzles] = useState<Puzzle[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 

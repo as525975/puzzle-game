@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import api from '../utils/api';
+import api from '../../utils/api';
+import { LeaderboardEntry, Puzzle } from '../../utils/types';
 
 const Leaderboard = () => {
-  const [leaderboard, setLeaderboard] = useState([]);
+  const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedPuzzle, setSelectedPuzzle] = useState('all');
-  const [puzzles, setPuzzles] = useState([]);
+  const [puzzles, setPuzzles] = useState<Puzzle[]>([]);
 
   useEffect(() => {
     fetchPuzzles();
