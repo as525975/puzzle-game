@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../utils/api';
 
 const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState([]);
@@ -19,7 +19,7 @@ const Leaderboard = () => {
 
   const fetchPuzzles = async () => {
     try {
-      const response = await axios.get('/puzzles');
+      const response = await api.get('/puzzles');
       setPuzzles(response.data);
     } catch (error) {
       console.error('Failed to load puzzles');
@@ -33,7 +33,7 @@ const Leaderboard = () => {
         ? '/leaderboard' 
         : `/leaderboard?puzzle_id=${selectedPuzzle}`;
       
-      const response = await axios.get(url);
+      const response = await api.get(url);
       setLeaderboard(response.data);
     } catch (error) {
       setError('Failed to load leaderboard');
