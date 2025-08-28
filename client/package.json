@@ -8,17 +8,17 @@
     "@testing-library/user-event": "^14.5.1",
     "axios": "^1.6.0",
     "html-webpack-plugin": "^5.6.4",
-    "nodemon": "^3.1.10",
+    "prettier": "^3.6.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.8.1",
-    "react-scripts": "^0.0.0",
     "web-vitals": "^2.1.4",
     "yarn": "^1.22.22"
   },
   "scripts": {
     "start": "webpack serve --config webpack.config.js --mode development",
-    "build": "webpack --config webpack.config.js --mode production"
+    "build": "webpack --config webpack.config.js --mode production",
+    "setup": "yarn build && yarn start"
   },
   "eslintConfig": {
     "extends": [

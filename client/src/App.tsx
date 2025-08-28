@@ -8,11 +8,9 @@ import Login from './components/Login';
 import Register from './components/Register';
 import PuzzleList from './components/PuzzleList';
 import MazeGame from './components/MazeGame';
-import Leaderboard from './components/Leaderboard';
+import Leaderboard from './components/Leaderboard/Leaderboard';
 import Navigation from './components/Navigation';
-
-// API configuration
-axios.defaults.baseURL = 'http://localhost:8000';
+import api from './utils/api';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -23,7 +21,7 @@ function App() {
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       // Verify token is still valid by trying to fetch puzzles
-      axios.get('/puzzles')
+      api.get('/puzzles')
         .then(() => {
           const userData = JSON.parse(localStorage.getItem('user') || '{}');
           setUser(userData);
@@ -83,7 +81,7 @@ function App() {
             />
             <Route 
               path="/puzzle/:id" 
-              element={user ? <MazeGame user={user} /> : <Navigate to="/login" />} 
+              element={user ? <MazeGame /> : <Navigate to="/login" />} 
             />
             <Route 
               path="/leaderboard" 
