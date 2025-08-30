@@ -49,13 +49,6 @@ def seed_puzzles():
     """Seed the database with initial puzzles"""
     db = SessionLocal()
     
-    # Check if puzzles already exist
-    existing_puzzles = db.query(Puzzle).count()
-    if existing_puzzles > 0:
-        print("Puzzles already seeded")
-        db.close()
-        return
-    
     puzzles = [
         {
             "name": "Simple Start",
