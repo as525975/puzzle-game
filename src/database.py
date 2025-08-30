@@ -29,6 +29,7 @@ class Puzzle(Base):
     grid = Column(JSON, nullable=False)  # 2D array representing the maze
     start_pos = Column(JSON, nullable=False)  # [row, col] position
     end_pos = Column(JSON, nullable=False)    # [row, col] position
+    portal_pairs = Column(JSON, nullable=False)  # Mapping of portal IDs to their positions
     created_at = Column(DateTime, default=func.now())
 
 class Attempt(Base):

@@ -87,19 +87,29 @@ def generate_puzzle(difficulty, name):
         available_positions = [pos for pos in available_positions if pos not in door_positions]
         
         # Place portals
+        portal_pairs = {}
         if num_portals > 0:
             portal_positions = random.sample(available_positions, num_portals)
-            for r, c in portal_positions:
-                grid[r][c] = "P"
+            portal_id = 1
+            for i in range(0, len(portal_positions), 2):
+                pos1 = portal_positions[i]
+                pos2 = portal_positions[i + 1]
+
+                grid[pos1[0]][pos1[1]] = f"P{portal_id}"
+                grid[pos2[0]][pos2[1]] = f"P{portal_id}"
+
+                portal_pairs[portal_id] = [pos1, pos2]
+                portal_id += 1
         
         # Verify the puzzle is solvable
-        if is_solvable(grid, start_pos, end_pos, size, key_positions, door_positions):
+        if is_solvable(grid, start_pos, end_pos, size, key_positions, portal_pairs):
             return {
                 "name": name,
                 "description": description,
                 "grid": grid,
                 "start_pos": start_pos,
-                "end_pos": end_pos
+                "end_pos": end_pos,
+                "portal_pairs": portal_pairs
             }
     
     # If we couldn't generate a valid puzzle, create a simple guaranteed solvable one
@@ -128,7 +138,7 @@ def has_basic_path(grid, start, end, size):
     
     return False
 
-def is_solvable(grid, start, end, size, key_positions, door_positions):
+def is_solvable(grid, start, end, size, key_positions, portal_pairs):
     """Check if the puzzle is solvable by simulating gameplay."""
     # State: (row, col, keys_collected, doors_opened)
     start_state = (start[0], start[1], frozenset(), frozenset())
@@ -144,7 +154,16 @@ def is_solvable(grid, start, end, size, key_positions, door_positions):
         # Check if we reached the end
         if (r, c) == end:
             return True
-        
+        current_cell = grid[r][c]
+        if current_cell.startswith("P") and current_cell in portal_pairs:
+            portal_positions = portal_pairs[current_cell]
+            for pr, pc in portal_positions:
+                if (pr, pc) != (r, c):  # Don't teleport to same position
+                    portal_state = (pr, pc, keys, opened_doors)
+                    if portal_state not in visited:
+                        visited.add(portal_state)
+                        queue.append(portal_state)
+
         for dr, dc in directions:
             nr, nc = r + dr, c + dc
             
@@ -195,7 +214,8 @@ def create_fallback_puzzle(difficulty):
                 [".", ".", ".", ".", "E"]
             ],
             "start_pos": (0, 0),
-            "end_pos": (4, 4)
+            "end_pos": (4, 4),
+            "portal_pairs": {}
         }
     elif difficulty.lower() == "medium":
         return {
@@ -203,13 +223,14 @@ def create_fallback_puzzle(difficulty):
             "description": "Use portals and collect keys to reach the exit!",
             "grid": [
                 ["S", "#", "K", "#", "."],
-                [".", ".", ".", "#", "P"],
+                [".", ".", ".", "#", "P1"],
                 ["#", ".", "#", "#", "."],
-                ["P", ".", ".", "#", "D"],
+                ["P1", ".", ".", "#", "D"],
                 [".", "#", "K", "D", "E"]
             ],
             "start_pos": (0, 0),
-            "end_pos": (4, 4)
+            "end_pos": (4, 4),
+            "portal_pairs": {1: [(1, 4), (3, 0)]}
         }
     else:  # hard
         return {
@@ -218,12 +239,16 @@ def create_fallback_puzzle(difficulty):
             "grid": [
                 ["S", ".", "K", "#", ".", "#", "K"],
                 ["#", ".", ".", ".", ".", "#", "."],
-                [".", "#", "#", "D", "#", ".", "P"],
+                [".", "#", "#", "D", "#", ".", "P1"],
                 ["K", ".", ".", ".", ".", ".", "D"],
-                [".", "#", "P", ".", "P", "#", "."],
-                [".", ".", "#", "D", "#", ".", "P"],
+                [".", "#", "P2", ".", "P1", "#", "."],
+                [".", ".", "#", "D", "#", ".", "P2"],
                 [".", ".", ".", ".", ".", ".", "E"]
             ],
             "start_pos": (0, 0),
-            "end_pos": (6, 6)
+            "end_pos": (6, 6),
+            "portal_pairs": {
+                1: [(2, 6), (4, 4)],
+                2: [(4, 2), (5, 5)]
+            }
         }

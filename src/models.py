@@ -24,6 +24,7 @@ class PuzzleResponse(BaseModel):
     grid: List[List[str]]
     start_pos: Tuple[int, int]
     end_pos: Tuple[int, int]
+    portal_pairs: dict[int, List[Tuple[int, int]]] = None
     difficulty: int
 
 class MoveRequest(BaseModel):

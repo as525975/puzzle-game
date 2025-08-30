@@ -158,6 +158,7 @@ def get_puzzle(puzzle_id: int, db: Session = Depends(get_db)):
         grid=puzzle.grid,
         start_pos=puzzle.start_pos,
         end_pos=puzzle.end_pos,
+        portal_pairs=puzzle.portal_pairs,
         difficulty=len(puzzle.grid) * len(puzzle.grid[0]) // 25
     )
 
@@ -177,6 +178,7 @@ def submit_attempt(
         puzzle.grid,
         puzzle.start_pos,
         puzzle.end_pos,
+        puzzle.portal_pairs,
         attempt.moves
     )
     completion_time = attempt.moves[-1].timestamp - attempt.moves[0].timestamp
