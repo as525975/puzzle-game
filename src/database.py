@@ -2,6 +2,7 @@ from sqlalchemy import create_engine, Column, Integer, String, Boolean, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
+from puzzle_create import generate_puzzle
 import os
 
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:5571@localhost:5433/maze_puzzles")
@@ -49,48 +50,22 @@ def seed_puzzles():
     """Seed the database with initial puzzles"""
     db = SessionLocal()
     
+    # If puzzles already exist, then clear
+    existing_puzzles = db.query(Puzzle).count()
+    if existing_puzzles > 0:
+        try:
+            db.query(Puzzle).delete()
+            db.commit()
+        except:
+            db.rollback()
+            print("Failed to clear existing puzzles")
+    
     puzzles = [
-        {
-            "name": "Simple Start",
-            "description": "A basic maze to get you started. Collect the key to open the door!",
-            "grid": [
-                ["S", ".", ".", ".", "K"],
-                ["#", ".", "#", "#", "."],
-                [".", ".", ".", "#", "D"],
-                ["#", ".", "#", ".", "."],
-                [".", ".", ".", ".", "E"]
-            ],
-            "start_pos": (0, 0),
-            "end_pos": (4, 4)
-        },
-        {
-            "name": "Portal Challenge",
-            "description": "Use the portals wisely! They can teleport you across the maze.",
-            "grid": [
-                ["S", "#", "K", "#", "."],
-                [".", ".", ".", "#", "P"],
-                ["#", ".", "#", "#", "."],
-                ["P", ".", ".", "#", "D"],
-                [".", "#", ".", ".", "E"]
-            ],
-            "start_pos": (0, 0),
-            "end_pos": (4, 4)
-        },
-        {
-            "name": "Multiple Keys",
-            "description": "This maze requires collecting multiple keys. Plan your route carefully!",
-            "grid": [
-                ["S", ".", "K", "#", ".", "#", "K"],
-                ["#", ".", ".", ".", ".", "#", "."],
-                [".", "#", "#", "D", "#", ".", "."],
-                ["K", ".", ".", ".", ".", ".", "D"],
-                [".", "#", ".", ".", ".", "#", "."],
-                [".", ".", "#", "D", "#", ".", "."],
-                [".", ".", ".", ".", ".", ".", "E"]
-            ],
-            "start_pos": (0, 0),
-            "end_pos": (6, 6)
-        }
+        generate_puzzle("easy", "Easy Adventure"),
+        generate_puzzle("easy", "Simple Maze Puzzle"),
+        generate_puzzle("medium", "Medium Challenge"),
+        generate_puzzle("hard", "Hard Labyrinth"),
+        generate_puzzle("hard", "Ultimate Puzzle"),
     ]
     
     for puzzle_data in puzzles:
