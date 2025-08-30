@@ -150,12 +150,12 @@ const MazeGame = () => {
       }
 
       // Find the other portal
-      const otherPortal = allPortals.find(portal =>
+      const otherPortal = allPortals.filter(portal =>
         !(portal[0] === currentPortal[0] && portal[1] === currentPortal[1])
       );
 
       if (otherPortal) {
-        setPlayerPos(otherPortal);
+        setPlayerPos(otherPortal[Math.floor(Math.random() * otherPortal.length)]);
         setMessage('Teleported through portal!');
       }
     } else {
