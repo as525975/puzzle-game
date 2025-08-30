@@ -26,8 +26,11 @@ class PuzzleResponse(BaseModel):
     end_pos: Tuple[int, int]
     difficulty: int
 
+class MoveRequest(BaseModel):
+    action: str  # 'up', 'down', 'left', 'right'
+    timestamp: int  # Unix timestamp in milliseconds
 class AttemptRequest(BaseModel):
-    moves: List[str]  # List of moves: 'up', 'down', 'left', 'right'
+    moves: List[MoveRequest] # List of moves
 
 class AttemptResponse(BaseModel):
     is_valid: bool

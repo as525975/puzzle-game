@@ -10,8 +10,8 @@ import PuzzleList from './components/PuzzleList';
 import MazeGame from './components/MazeGame';
 import Leaderboard from './components/Leaderboard/Leaderboard';
 import Navigation from './components/Navigation';
-import api from './utils/api';
 
+axios.defaults.baseURL = 'http://localhost:8000';
 function App() {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem('token'));
@@ -21,7 +21,7 @@ function App() {
     if (token) {
       axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       // Verify token is still valid by trying to fetch puzzles
-      api.get('/puzzles')
+      axios.get('/puzzles')
         .then(() => {
           const userData = JSON.parse(localStorage.getItem('user') || '{}');
           setUser(userData);

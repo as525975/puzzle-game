@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Move, Puzzle } from '../utils/types';
-import api from '../utils/api';
+import axios from 'axios';
 
 const MazeGame = () => {
   const { id } = useParams();
@@ -16,7 +16,7 @@ const MazeGame = () => {
 
   useEffect(() => {
     fetchPuzzle();
-  }, [id]);
+  }, []);
 
   useEffect(() => {
     const handleKeyPress = (e) => {
@@ -58,7 +58,9 @@ const MazeGame = () => {
 
   const fetchPuzzle = async () => {
     try {
-      const response = await api.get(`/puzzles/${id}`);
+      const token = localStorage.getItem('token');
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const response = await axios.get(`/puzzles/${id}`, { headers });
       setPuzzle(response.data);
       setPlayerPos(response.data.start_pos);
       setLoading(false);
@@ -68,7 +70,7 @@ const MazeGame = () => {
     }
   };
 
-  const handleMove = useCallback((direction) => {
+  const handleMove = useCallback((direction: string) => {
     if (!puzzle || gameStatus !== 'playing') return;
 
     const [row, col] = playerPos;
@@ -122,7 +124,10 @@ const MazeGame = () => {
 
     // Update position
     setPlayerPos(newPos);
-    setMoves(prevMoves => [...prevMoves, direction]);
+    setMoves(prevMoves => [...prevMoves, {
+      action: direction,
+      timestamp: Date.now()
+    }]);
 
     // Handle special cells
     if (newCell === 'K') {
@@ -161,21 +166,32 @@ const MazeGame = () => {
     if (newPos[0] === puzzle.end_pos[0] && newPos[1] === puzzle.end_pos[1]) {
       setGameStatus('won');
       setMessage('Congratulations! You completed the maze!');
-      submitSolution([...moves, direction]);
+      submitSolution([...moves, { action: direction, timestamp: Date.now() }]);
     }
   }, [puzzle, playerPos, keysCollected, gameStatus, moves]);
 
-  const submitSolution = async (finalMoves) => {
+  const submitSolution = async (finalMoves: Move[]) => {
     setSubmitting(true);
     try {
-      const response = await api.post(`/puzzles/${id}/attempt`, {
-        moves: finalMoves
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setMessage('You must be logged in to submit your solution');
+        return;
+      }
+      const response = await axios.post(`/puzzles/${id}/attempt`, {
+        moves: finalMoves,
+      }, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json' 
+        },
+        withCredentials: true,
       });
 
       if (response.data.is_valid) {
         setGameStatus('won');
         setMessage(
-          `${response.data.message} Time: ${response.data.completion_time?.toFixed(2)}s`
+          `${response.data.message} Time: ${(response.data.completion_time / 1000).toFixed(2)}s`
         );
       } else {
         setGameStatus('lost');
@@ -183,7 +199,11 @@ const MazeGame = () => {
       }
     } catch (error) {
       console.error(error);
-      setMessage('Error submitting solution');
+      if (error.response?.status === 401 || error.response?.status === 403) {
+        setMessage('Authentication failed. Please log in again.');
+      } else {
+        setMessage('Failed to submit solution. Please try again.');
+      }
     } finally {
       setSubmitting(false);
     }
@@ -336,7 +356,7 @@ const MazeGame = () => {
 
         {moves.length > 0 && (
           <div className="move-history">
-            <strong>Move History:</strong> {moves.join(' → ')}
+            <strong>Move History:</strong> {moves.map(move => move.action).join(' → ')}
           </div>
         )}
       </div>

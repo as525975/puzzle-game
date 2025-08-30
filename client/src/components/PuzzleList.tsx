@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import api from '../utils/api';
+import axios from 'axios';
 import { Puzzle } from '../utils/types';
 
 const PuzzleList = () => {
@@ -14,7 +14,7 @@ const PuzzleList = () => {
 
   const fetchPuzzles = async () => {
     try {
-      const response = await api.get('/puzzles');
+      const response = await axios.get('/puzzles');
       setPuzzles(response.data);
     } catch (error) {
       setError('Failed to load puzzles. Please try again.');

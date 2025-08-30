@@ -1,10 +1,11 @@
 from typing import List, Tuple
+from models import MoveRequest
 
 def validate_maze_solution(
     grid: List[List[str]], 
     start_pos: Tuple[int, int], 
     end_pos: Tuple[int, int], 
-    moves: List[str]
+    moves: List[MoveRequest]
 ) -> Tuple[bool, str]:
     """
     Validate a maze solution by simulating the player's moves.
@@ -67,9 +68,9 @@ def validate_maze_solution(
         return True, "Valid move"
     
     # Simulate each move
-    for i, move in enumerate(moves):
+    for i, move_request in enumerate(moves):
         visited_positions.add(tuple(current_pos))
-        
+        move = move_request.action
         # Calculate new position based on move
         new_pos = current_pos.copy()
         if move == 'up':
@@ -103,11 +104,11 @@ def validate_maze_solution(
                 current_pos = [destination[0], destination[1]]
         
         # Check if we've reached the goal
-        if tuple(current_pos) == end_pos:
+        if tuple(current_pos) == tuple(end_pos):
             return True, f"Congratulations! Maze completed in {len(moves)} moves!"
     
     # If we finish all moves but haven't reached the goal
-    if tuple(current_pos) == end_pos:
+    if tuple(current_pos) == tuple(end_pos):
         return True, f"Congratulations! Maze completed in {len(moves)} moves!"
     else:
         return False, f"Did not reach the goal. Final position: ({current_pos[0]}, {current_pos[1]}), Goal: {end_pos}"

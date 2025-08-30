@@ -29,7 +29,7 @@ app.add_middleware(
 )
 
 # Security
-security = HTTPBearer()
+security = HTTPBearer(auto_error=False)
 JWT_SECRET = os.getenv("JWT_SECRET_KEY", "your-secret-key-change-in-production")
 JWT_ALGORITHM = "HS256"
 JWT_EXPIRATION_HOURS = 24
@@ -168,31 +168,27 @@ def submit_attempt(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
-    """Submit a solution attempt for a puzzle"""
-    
     puzzle = db.query(Puzzle).filter(Puzzle.id == puzzle_id).first()
     if not puzzle:
         raise HTTPException(status_code=404, detail="Puzzle not found")
     
     # Validate the solution
-    start_time = datetime.utcnow()
     is_valid, message = validate_maze_solution(
         puzzle.grid,
         puzzle.start_pos,
         puzzle.end_pos,
         attempt.moves
     )
-    completion_time = (datetime.utcnow() - start_time).total_seconds()
+    completion_time = attempt.moves[-1].timestamp - attempt.moves[0].timestamp
     
     # Save attempt to database
     new_attempt = Attempt(
         user_id=current_user.id,
         puzzle_id=puzzle_id,
-        moves=attempt.moves,
+        moves=[move.action for move in attempt.moves],
         is_valid=is_valid,
         completion_time=completion_time if is_valid else None
     )
-    
     db.add(new_attempt)
     db.commit()
     

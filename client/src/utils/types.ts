@@ -17,7 +17,6 @@ export type LeaderboardEntry = {
 }
 
 export type Move = {
-    moveNumber: number;
     action: string;
-    timestamp: string;
+    timestamp: number;
 }
