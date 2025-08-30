@@ -47,13 +47,8 @@ const Leaderboard = () => {
     }
   };
 
-  const formatTime = (seconds) => {
-    if (seconds < 60) {
-      return `${seconds.toFixed(1)}s`;
-    }
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = (seconds % 60).toFixed(1);
-    return `${minutes}m ${remainingSeconds}s`;
+  const formatTime = (milliseconds: number) => {
+    return `${(milliseconds / 1000).toFixed(2)}s`;
   };
 
   const formatDate = (dateString) => {
@@ -111,7 +106,7 @@ const Leaderboard = () => {
 
       {leaderboard.length === 0 ? (
         <div style={{ textAlign: 'center', color: '#666', fontSize: '1.1rem' }}>
-          No completed attempts yet. Be the first to complete a puzzle!
+          {`No completed attempts yet. Be the first to complete ${!isNaN(Number(selectedPuzzle)) ? puzzles.filter(puzzle => puzzle.id === Number(selectedPuzzle))[0].name : 'a puzzle'}!`}
         </div>
       ) : (
         <table className="leaderboard-table">
