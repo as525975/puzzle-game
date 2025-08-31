@@ -1,0 +1,68 @@
+.leaderboard-container {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  margin: 2rem auto;
+  max-width: 800px;
+}
+
+.leaderboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.leaderboard-table th {
+  background: #f8f9fa;
+  font-weight: 600;
+  color: #555;
+}
+
+.leaderboard-table tr:hover {
+  background: #f8f9fa;
+}
+
+.leaderboard-text {
+  text-align: center;
+  margin-bottom: '2rem';
+}
+
+.username-text {
+  font-weight: 500;
+}
+
+.explainer-container {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.explainer-paragraph {
+  color: #666;
+}
+
+.label-text {
+  font-weight: 500;
+  margin-right: 1rem;
+}
+
+.empty-text-container {
+  text-align: center;
+  font-size: 1.1rem;
+  color: #666;
+}
+
+.select-input {
+  padding: 0.5rem;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 1rem;
+}

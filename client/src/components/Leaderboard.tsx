@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import '../styles.scss';
+import './LeaderboardStyles.scss'
 import { LeaderboardEntry, Puzzle } from '../utils/types';
 
 const Leaderboard = () => {
@@ -25,7 +27,7 @@ const Leaderboard = () => {
       const response = await axios.get('/puzzles', { headers });
       setPuzzles(response.data);
     } catch (error) {
-      console.error('Failed to load puzzles');
+      setError('Failed to load puzzles');
     }
   };
 
@@ -72,24 +74,19 @@ const Leaderboard = () => {
 
   return (
     <div className="leaderboard-container">
-      <h1 style={{ textAlign: 'center', marginBottom: '2rem' }}>
+      <h1 className="leaderboard-text">
         🏆 Leaderboard
       </h1>
 
-      <div style={{ marginBottom: '2rem', textAlign: 'center' }}>
-        <label htmlFor="puzzle-select" style={{ marginRight: '1rem', fontWeight: '500' }}>
+      <div className="leaderboard-text">
+        <label htmlFor="puzzle-select" className="label-text">
           Filter by Puzzle:
         </label>
         <select
           id="puzzle-select"
           value={selectedPuzzle}
           onChange={(e) => setSelectedPuzzle(e.target.value)}
-          style={{
-            padding: '0.5rem',
-            borderRadius: '8px',
-            border: '2px solid #e1e5e9',
-            fontSize: '1rem'
-          }}
+          className="select-input"
         >
           <option value="all">All Puzzles</option>
           {puzzles.map(puzzle => (
@@ -105,7 +102,7 @@ const Leaderboard = () => {
       )}
 
       {leaderboard.length === 0 ? (
-        <div style={{ textAlign: 'center', color: '#666', fontSize: '1.1rem' }}>
+        <div className="empty-text-container">
           {`No completed attempts yet. Be the first to complete ${!isNaN(Number(selectedPuzzle)) ? puzzles.filter(puzzle => puzzle.id === Number(selectedPuzzle))[0].name : 'a puzzle'}!`}
         </div>
       ) : (
@@ -131,7 +128,7 @@ const Leaderboard = () => {
                     {index === 2 && ' 🥉'}
                   </strong>
                 </td>
-                <td style={{ fontWeight: '500' }}>{entry.username}</td>
+                <td className="username-text">{entry.username}</td>
                 <td>{entry.puzzle_name}</td>
                 <td>{formatTime(entry.completion_time)}</td>
                 <td>{entry.total_moves}</td>
@@ -142,8 +139,8 @@ const Leaderboard = () => {
         </table>
       )}
 
-      <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-        <p style={{ color: '#666' }}>
+      <div className="explainer-container">
+        <p className="explainer-paragraph">
           Rankings are based on completion time. Faster times rank higher!
         </p>
       </div>
