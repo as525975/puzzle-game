@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import './MazeGameStyles.scss';
+import '../styles.scss';
 import { Move, Puzzle } from '../utils/types';
 import axios from 'axios';
 
@@ -327,7 +329,7 @@ const MazeGame = () => {
           </button>
         </div>
 
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div className="footer-container">
           <button
             className="btn btn-secondary"
             onClick={resetGame}
@@ -352,7 +354,7 @@ const MazeGame = () => {
       </div>
 
       {submitting && (
-        <div style={{ textAlign: 'center', marginTop: '1rem' }}>
+        <div className="submitting-container">
           Submitting solution...
         </div>
       )}
