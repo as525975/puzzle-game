@@ -132,15 +132,15 @@ def get_puzzles(db: Session = Depends(get_db)):
     puzzles = db.query(Puzzle).all()
     return [
         PuzzleResponse(
-            id=p.id,
-            name=p.name,
-            description=p.description,
-            grid=p.grid,
-            start_pos=p.start_pos,
-            end_pos=p.end_pos,
-            difficulty=len(p.grid) * len(p.grid[0]) // 25  # Simple difficulty calculation
+            id=puzzle.id,
+            name=puzzle.name,
+            description=puzzle.description,
+            grid=puzzle.grid,
+            start_pos=puzzle.start_pos,
+            end_pos=puzzle.end_pos,
+            difficulty=len(puzzle.grid)
         )
-        for p in puzzles
+        for puzzle in puzzles
     ]
 
 @app.get("/puzzles/{puzzle_id}", response_model=PuzzleResponse)
@@ -159,7 +159,7 @@ def get_puzzle(puzzle_id: int, db: Session = Depends(get_db)):
         start_pos=puzzle.start_pos,
         end_pos=puzzle.end_pos,
         portal_pairs=puzzle.portal_pairs,
-        difficulty=len(puzzle.grid) * len(puzzle.grid[0]) // 25
+        difficulty=len(puzzle.grid)
     )
 
 @app.post("/puzzles/{puzzle_id}/attempt", response_model=AttemptResponse)
