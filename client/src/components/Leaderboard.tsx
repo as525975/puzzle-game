@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { LeaderboardEntry, Puzzle } from '../../utils/types';
+import { LeaderboardEntry, Puzzle } from '../utils/types';
 
 const Leaderboard = () => {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[]>([]);
