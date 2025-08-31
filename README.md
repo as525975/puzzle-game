@@ -16,7 +16,7 @@ A full-stack maze puzzle game with FastAPI backend, PostgreSQL database, and Rea
 - JWT authentication with user registration/login
 - Maze validation logic with keys, doors, portals, and walls
 - PostgreSQL database with SQLAlchemy ORM
-- Comprehensive API documentation via FastAPI's automatic OpenAPI generation
+- API documentation via FastAPI's automatic OpenAPI generation
 
 ### Frontend (React)
 - Puzzle selection and gameplay interface
@@ -50,7 +50,7 @@ pip install -r requirements.txt
 createdb maze_puzzles
 
 # Set environment variables
-export DATABASE_URL="postgresql://postgres:5571@localhost/maze_puzzles"
+export DATABASE_URL="postgresql://postgres:password@localhost/maze_puzzles"
 export JWT_SECRET_KEY="your-secret-key-here"
 ```
 
@@ -95,6 +95,11 @@ pytest
 cd client
 npm test
 ```
+### Docker 
+```bash
+docker-compose build
+docker-compose up
+```
 
 ## Gameplay
 
@@ -130,7 +135,7 @@ npm test
 - id, username, email, hashed_password, created_at
 
 ### Puzzles  
-- id, name, description, grid, start_pos, end_pos, created_at
+- id, name, description, grid, start_pos, end_pos, portal_pairs, created_at
 
 ### Attempts
 - id, user_id, puzzle_id, moves, is_valid, completed_at, completion_time
@@ -148,5 +153,4 @@ npm test
 - Multiple difficulty levels
 - Real-time multiplayer competitions
 - Puzzle editor for user-created content
-- Advanced statistics and analytics
 - Mobile-responsive design improvements
