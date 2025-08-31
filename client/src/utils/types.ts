@@ -6,6 +6,7 @@ export type Puzzle = {
     id: number;
     end_pos: [number, number];
     start_pos: [number, number];
+    portal_pairs: Record<number, Array<[number, number]>>; // Array of portal coordinates
 }
 
 export type LeaderboardEntry = {
