@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import './PuzzleListStyles.scss';
+import '../styles.scss';
 import axios from 'axios';
 import { Puzzle } from '../utils/types';
 
@@ -54,9 +56,7 @@ const PuzzleList = () => {
 
   return (
     <div>
-      <h1 style={{ textAlign: 'center', color: 'white', marginBottom: '2rem' }}>
-        Choose Your Puzzle
-      </h1>
+      <h1>Choose Your Puzzle</h1>
       
       <div className="puzzle-grid">
         {puzzles.map(puzzle => (
@@ -76,21 +76,21 @@ const PuzzleList = () => {
               </span>
             </div>
 
-            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+            <div className="puzzle-elements-container">
               {/* Show mini preview of maze elements */}
               <span>Elements:</span>
               {puzzle.grid.some(row => row.includes('K')) && 
-                <span style={{ background: '#FFD700', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem' }}>
+                <span className="puzzle-keys">
                   🗝️ Keys
                 </span>
               }
               {puzzle.grid.some(row => row.includes('D')) && 
-                <span style={{ background: '#8B4513', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem' }}>
+                <span className="puzzle-doors">
                   🚪 Doors
                 </span>
               }
               {puzzle.grid.some(row => row.includes('P')) && 
-                <span style={{ background: '#9C27B0', color: 'white', padding: '2px 6px', borderRadius: '4px', fontSize: '0.8rem' }}>
+                <span className="puzzle-portals">
                   🌀 Portals
                 </span>
               }
