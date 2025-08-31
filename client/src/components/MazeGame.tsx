@@ -136,26 +136,14 @@ const MazeGame = () => {
         setKeysCollected(prev => new Set([...prev, keyPos]));
         setMessage('Collected a key!');
       }
-    } else if (newCell === 'P') {
-      // Handle portal teleportation
-      const currentPortal = [newPos[0], newPos[1]];
-      const allPortals: number[][] = [];
-
-      for (let r = 0; r < puzzle.grid.length; r++) {
-        for (let c = 0; c < puzzle.grid[0].length; c++) {
-          if (puzzle.grid[r][c] === 'P') {
-            allPortals.push([r, c]);
-          }
-        }
-      }
-
+    } else if (newCell.startsWith('P')) {
       // Find the other portal
-      const otherPortal = allPortals.filter(portal =>
-        !(portal[0] === currentPortal[0] && portal[1] === currentPortal[1])
+      const otherPortal = puzzle.portal_pairs[parseInt(newCell.substring(1))]?.find(
+        ([r, c]) => r !== newPos[0] || c !== newPos[1]
       );
 
       if (otherPortal) {
-        setPlayerPos(otherPortal[Math.floor(Math.random() * otherPortal.length)]);
+        setPlayerPos(otherPortal);
         setMessage('Teleported through portal!');
       }
     } else {
@@ -218,7 +206,7 @@ const MazeGame = () => {
     setMessage('');
   };
 
-  const getCellDisplay = (cell, rowIndex, colIndex) => {
+  const getCellDisplay = (cell: string, rowIndex: number, colIndex: number) => {
     const isPlayer = rowIndex === playerPos[0] && colIndex === playerPos[1];
 
     if (isPlayer) {
@@ -239,9 +227,11 @@ const MazeGame = () => {
           : { content: '🗝️', className: 'key' };
       case 'D':
         return { content: '🚪', className: 'door' };
-      case 'P':
-        return { content: '🌀', className: 'portal' };
       default:
+        if (cell.startsWith('P')) {
+          // Check if it's any P followed by a number (P1, P2, P3, etc.)
+          return { content: '🌀', className: 'portal' };
+        }
         return { content: '', className: 'empty' };
     }
   };

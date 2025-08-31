@@ -23,15 +23,15 @@ const PuzzleList = () => {
     }
   };
 
-  const getDifficultyColor = (difficulty) => {
-    if (difficulty <= 3) return '#4CAF50'; // Easy - Green
-    if (difficulty <= 6) return '#FF9800'; // Medium - Orange
+  const getDifficultyColor = (difficulty: number) => {
+    if (difficulty == 5) return '#4CAF50'; // Easy - Green
+    if (difficulty == 6) return '#FF9800'; // Medium - Orange
     return '#F44336'; // Hard - Red
   };
 
-  const getDifficultyText = (difficulty) => {
-    if (difficulty <= 3) return 'Easy';
-    if (difficulty <= 6) return 'Medium';
+  const getDifficultyText = (difficulty: number) => {
+    if (difficulty == 5) return 'Easy';
+    if (difficulty == 6) return 'Medium';
     return 'Hard';
   };
 
