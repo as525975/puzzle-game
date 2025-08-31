@@ -8,7 +8,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import PuzzleList from './components/PuzzleList';
 import MazeGame from './components/MazeGame';
-import Leaderboard from './components/Leaderboard/Leaderboard';
+import Leaderboard from './components/Leaderboard';
 import Navigation from './components/Navigation';
 
 axios.defaults.baseURL = 'http://localhost:8000';
